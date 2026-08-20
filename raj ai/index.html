@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rajat AI — Speak-to-Speak Conversational Agent</title>
+  <meta name="description"
+    content="Rajat AI: A real-time Speak-to-Speak AI Agent inspired by Google Gemini Live with voice recognition, intelligent responses, and natural speech synthesis." />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="theme-dark">
+  <!-- Background Glow & Grid Effects -->
+  <div class="bg-effects">
+    <div class="gradient-sphere sphere-1"></div>
+    <div class="gradient-sphere sphere-2"></div>
+    <div class="gradient-sphere sphere-3"></div>
+    <div class="bg-grid"></div>
+  </div>
+
+  <div class="app-container">
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <div class="gemini-sparkle">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="brand-text">
+          <h1>Rajat <span class="brand-ai">AI</span> <span class="badge">Live 2.0</span></h1>
+          <p class="tagline">Speak-to-Speak Conversational Intelligence</p>
+        </div>
+      </div>
+
+      <!-- Agent State Pill -->
+      <div class="status-badge" id="statusBadge">
+        <span class="status-dot"></span>
+        <span class="status-text" id="statusText">Rajat AI तैयार है</span>
+      </div>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <!-- Quick Language Switcher -->
+        <div class="lang-selector-wrap">
+          <select id="quickLangSelect" class="lang-select" title="Change Language / भाषा बदलें">
+            <option value="hi-IN" selected>🇮🇳 हिन्दी (Hindi)</option>
+            <option value="hinglish">🇮🇳 Hinglish</option>
+            <option value="en-US">🌐 English</option>
+          </select>
+        </div>
+
+        <button id="viewToggleBtn" class="action-btn" title="Toggle Voice / Chat Mode">
+          <i class="fa-solid fa-comments"></i>
+          <span class="btn-label" id="viewToggleLabel">Chat View</span>
+        </button>
+        <button id="clearChatBtn" class="action-btn icon-only" title="Clear Conversation">
+          <i class="fa-solid fa-rotate-left"></i>
+        </button>
+        <button id="apiKeyStatusBtn" class="action-btn api-status-btn" title="Google Gemini Connection Status">
+          <i class="fa-solid fa-bolt"></i>
+          <span class="btn-label" id="apiKeyStatusText">Connect Gemini</span>
+        </button>
+        <button id="settingsBtn" class="action-btn icon-only" title="Settings & Customization">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Dynamic Content Area -->
+    <main class="main-content">
+      <!-- VIEW 1: Live Voice Mode (Gemini Orb) -->
+      <section class="voice-view active" id="voiceView">
+        <div class="voice-hero">
+          <!-- Canvas Visualizer for Gemini Orb / Waveform -->
+          <div class="orb-stage">
+            <canvas id="visualizerCanvas" width="560" height="560"></canvas>
+            <div class="orb-center-pulse" id="orbCenterPulse">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+          </div>
+
+          <!-- Real-time Subtitles / Live Transcript -->
+          <div class="transcript-display">
+            <div class="transcript-speaker" id="transcriptSpeaker">
+              <span class="speaker-tag" id="speakerTag">Rajat AI</span>
+              <span class="live-pulse-wave"><span></span><span></span><span></span><span></span></span>
+            </div>
+            <p class="transcript-text" id="liveTranscript">
+              "नमस्ते! मैं Rajat AI हूँ। माइक बटन दबाकर या 'नमस्ते' बोलकर मुझसे बात करें!"
+            </p>
+          </div>
+
+          <!-- Suggested Quick Prompts (Hindi & Hinglish) -->
+          <div class="suggestion-chips" id="suggestionChips">
+            <button class="chip" data-prompt="नमस्ते रजत! आप कैसे हो?">👋 "नमस्ते! आप कैसे हो?"</button>
+            <button class="chip" data-prompt="अंतरिक्ष का कोई मज़ेदार तथ्य बताओ!">✨ "अंतरिक्ष का तथ्य"</button>
+            <button class="chip" data-prompt="आप कौन हो और क्या-क्या कर सकते हो?">🤖 "आप क्या कर सकते हो?"</button>
+            <button class="chip" data-prompt="एक बढ़िया सा मज़ेदार चुटकुला सुनाओ!">😄 "मज़ेदार चुटकुला"</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 2: Interactive Chat Log View -->
+      <section class="chat-view" id="chatView">
+        <div class="chat-messages" id="chatMessages">
+          <div class="message-group agent-group">
+            <div class="avatar agent-avatar">
+              <i class="fa-solid fa-sparkles"></i>
+            </div>
+            <div class="message-body">
+              <div class="message-header">
+                <span class="sender-name">Rajat AI</span>
+                <span class="message-time">Just now</span>
+              </div>
+              <div class="message-content">
+                नमस्ते! मैं Rajat AI हूँ, आपका speak-to-speak हिन्दी AI सहायक। आप मुझसे सीधे माइक से बोलकर बात कर सकते
+                हैं या यहाँ टाइप कर सकते हैं। आज मैं आपकी क्या सहायता करूँ?
+              </div>
+              <div class="message-actions">
+                <button class="msg-btn speak-msg-btn" title="Speak this response"><i
+                    class="fa-solid fa-volume-high"></i></button>
+                <button class="msg-btn copy-msg-btn" title="Copy text"><i class="fa-regular fa-copy"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="typing-indicator hidden" id="typingIndicator">
+          <div class="dots">
+            <span></span><span></span><span></span>
+          </div>
+          <span class="typing-label">Rajat AI सोच रहा है...</span>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom Controls & Voice Bar -->
+    <footer class="app-controls">
+      <div class="controls-inner">
+        <!-- Input Mode Options -->
+        <div class="text-input-wrap" id="textInputWrap">
+          <input type="text" id="textPromptInput" placeholder="Type a question or press Mic to speak..."
+            autocomplete="off" />
+          <button id="sendTextBtn" class="send-btn" title="Send message">
+            <i class="fa-solid fa-arrow-up"></i>
+          </button>
+        </div>
+
+        <!-- Center Voice Interaction Bar -->
+        <div class="voice-actions">
+          <!-- Voice Mute / Audio Playback Toggle -->
+          <button id="speakerToggleBtn" class="control-btn secondary-btn active" title="Toggle AI Voice Response">
+            <i class="fa-solid fa-volume-high" id="speakerIcon"></i>
+          </button>
+
+          <!-- Primary Mic Button -->
+          <button id="micBtn" class="mic-button" title="Start / Stop Speaking">
+            <div class="mic-ring ring-1"></div>
+            <div class="mic-ring ring-2"></div>
+            <div class="mic-icon-inner">
+              <i class="fa-solid fa-microphone" id="micIcon"></i>
+            </div>
+          </button>
+
+          <!-- Auto Conversation Mode Toggle (Hands-free loop) -->
+          <button id="autoLoopBtn" class="control-btn secondary-btn" title="Hands-free Auto Conversation Loop">
+            <i class="fa-solid fa-repeat"></i>
+            <span class="tooltip">Auto Loop</span>
+          </button>
+        </div>
+
+        <!-- Stop Speaking Button (when AI is talking) -->
+        <button id="stopSpeakingBtn" class="stop-speaking-btn hidden" title="Interrupt / Stop Agent Voice">
+          <i class="fa-solid fa-stop"></i> Stop Speaking
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Settings Modal Drawer -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fa-solid fa-sliders"></i>
+          <h3>Agent & Voice Settings</h3>
+        </div>
+        <button class="close-modal-btn" id="closeSettingsBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Google Gemini API Key Input -->
+        <div class="setting-group api-key-setting-group">
+          <div class="setting-label">
+            <label for="apiKeyInput"><i class="fa-solid fa-key"></i> Google Gemini API Key</label>
+            <span class="setting-hint"><a href="https://aistudio.google.com/app/apikey" target="_blank"
+                rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Get Free API Key</a></span>
+          </div>
+          <div class="input-with-toggle">
+            <input type="password" id="apiKeyInput" placeholder="Paste your AIzaSy... key here" autocomplete="off" />
+            <button type="button" id="toggleApiKeyVis" class="toggle-vis-btn" title="Show / Hide Key"><i
+                class="fa-regular fa-eye"></i></button>
+          </div>
+          <div class="api-key-actions">
+            <button type="button" id="testApiKeyBtn" class="test-api-btn">
+              <i class="fa-solid fa-bolt"></i> Test Gemini Connection
+            </button>
+            <span id="apiKeyTestResult" class="api-test-result"></span>
+          </div>
+          <p class="field-note">Stored 100% privately in your browser storage. Connects to Google's official Gemini
+            neural models.</p>
+        </div>
+
+        <!-- Model Selection -->
+        <div class="setting-group">
+          <label for="modelSelect"><i class="fa-solid fa-brain"></i> Gemini AI Model</label>
+          <select id="modelSelect">
+            <option value="gemini-2.0-flash" secondary>Gemini 2.0 Flash (Next-Gen & Fastest Voice Response)</option>
+            <option value="gemini-1.5-flash" select>Gemini 1.5 Flash (Super Fast & Highly Reliable)</option>
+            <option value="gemini-1.5-pro" select>Gemini 1.5 Pro (Deep Multilingual Reasoning)</option>
+            <option value="gemini-3.5-flash-lite" selected>gemini-3.5-flash-lite</option>
+          </select>
+        </div>
+        <!-- Language Selection -->
+        <div class="setting-group">
+          <label for="langSelect">Language / भाषा</label>
+          <select id="langSelect">
+            <option value="hi-IN" selected>🇮🇳 हिन्दी (Hindi - hi-IN)</option>
+            <option value="hinglish">🇮🇳 Hinglish (Hindi in English letters)</option>
+            <option value="en-IN">🇮🇳 Indian English (en-IN)</option>
+            <option value="en-US">🌐 English (US - en-US)</option>
+          </select>
+        </div>
+
+        <!-- AI Persona / Personality -->
+        <div class="setting-group">
+          <label for="personaSelect">AI Personality / शैली</label>
+          <select id="personaSelect">
+            <option value="gemini" selected>Rajat AI (मित्रवत, बुद्धिमान और मददगार)</option>
+            <option value="buddy">Best Friend (मज़ेदार, दोस्ताना और अनौपचारिक)</option>
+            <option value="mentor">Tech Mentor & Guru (स्पष्ट व्याख्या और मार्गदर्शन)</option>
+            <option value="storyteller">कथाकार / Storyteller (रोचक कहानियाँ और कविता)</option>
+          </select>
+        </div>
+
+        <!-- Agent Knowledge Base / Context -->
+        <div class="setting-group">
+          <div class="setting-label">
+            <label for="knowledgeBaseInput"><i class="fa-solid fa-book-open"></i> Agent Knowledge Base & Context</label>
+            <span class="setting-hint">Custom memory, FAQs & facts</span>
+          </div>
+          <textarea id="knowledgeBaseInput" rows="4"
+            placeholder="Paste custom knowledge, document text, rules, or facts that Rajat AI should know and reference during conversations..."></textarea>
+          <p class="field-note">Rajat AI will use this knowledge base to answer questions accurately.</p>
+        </div>
+
+        <!-- Voice Selection (TTS) -->
+        <div class="setting-group">
+          <label for="voiceSelect">AI Voice Output</label>
+          <select id="voiceSelect">
+            <option value="">Loading system voices...</option>
+          </select>
+        </div>
+
+        <!-- Speech Pitch & Rate Sliders -->
+        <div class="slider-row">
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="rateSlider">Speaking Speed</label>
+              <span id="rateVal">1.0x</span>
+            </div>
+            <input type="range" id="rateSlider" min="0.7" max="1.5" step="0.05" value="1.0" />
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="pitchSlider">Voice Pitch</label>
+              <span id="pitchVal">1.0</span>
+            </div>
+            <input type="range" id="pitchSlider" min="0.6" max="1.4" step="0.05" value="1.0" />
+          </div>
+        </div>
+
+        <!-- Continuous Auto Conversation Toggle -->
+        <div class="setting-toggle-row">
+          <div>
+            <div class="toggle-title">Continuous Conversation Loop</div>
+            <div class="toggle-desc">Automatically listen for your voice after Rajat AI finishes speaking.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="continuousToggle" checked />
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <!-- Sound FX Toggle -->
+        <div class="setting-toggle-row">
+          <div>
+            <div class="toggle-title">Audio Chimes & Feedback</div>
+            <div class="toggle-desc">Play gentle audio chimes on mic start and completion.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="soundFxToggle" checked />
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="testVoiceBtn" class="btn secondary">
+          <i class="fa-solid fa-volume-high"></i> Test Voice
+        </button>
+        <button id="saveSettingsBtn" class="btn primary">
+          <i class="fa-solid fa-check"></i> Save & Apply
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- App Script -->
+  <script src="app.js"></script>
+</body>
+
+</html>
